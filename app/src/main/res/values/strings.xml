@@ -1,0 +1,34 @@
+<resources>
+    <!-- Existing strings -->
+    <string name="app_name">ProjectUI</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- Drawer header -->
+    <string name="profile_image_desc">User profile image</string>
+    <string name="user_name">User Name</string>
+
+    <!-- Create Listing screen -->
+    <string name="price_hour">Price per hour</string>
+    <string name="availability">Availability</string>
+    <string name="time_window_picker">Time Window Picker</string>
+    <string name="description">Description</string>
+    <string name="active">Active</string>
+    <string name="create_listing">Create Listing</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Drawer menu -->
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_listings_created">My Listings</string>
+    <string name="drawer_listings_reserved">Reserved Listings</string>
+    <string name="drawer_payment_methods">Payment Methods</string>
+    <string name="drawer_support">Support / Help</string>
+    <string name="reserve">Reserve</string>
+    <string name="go_back_to_results">Go back to results</string>
+    <string name="description_covered_driveway_near_downtown">Description: Covered driveway near downtown.</string>
+    <string name="availability_6pm_9pm">Availability: 6pm - 9pm</string>
+    <string name="show_in_map">Show in Map</string>
+    <string name="add_to_calendar">Add to Calendar</string>
+    <string name="cancel_booking">Cancel Booking</string>
+</resources>

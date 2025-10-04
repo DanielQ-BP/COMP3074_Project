@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment android:id="@+id/homeFragment" android:name="com.comp3074_101384549.projectui.ui.home.HomeFragment" />
+    <fragment android:id="@+id/reservedListingsFragment" android:name="com.comp3074_101384549.projectui.ui.reservations.ReservedListingsFragment" />
+    <fragment android:id="@+id/profileFragment" android:name="com.comp3074_101384549.projectui.ui.profile.ProfileFragment" />
+    <fragment android:id="@+id/createListingFragment" android:name="com.comp3074_101384549.projectui.ui.listings.CreateListingFragment" />
+    <fragment android:id="@+id/listingDetailsFragment" android:name="com.comp3074_101384549.projectui.ui.listings.ListingDetailsFragment" />
+    <fragment android:id="@+id/paymentFragment" android:name="com.comp3074_101384549.projectui.ui.payment.PaymentFragment" />
+    <fragment android:id="@+id/bookingConfirmationFragment" android:name="com.comp3074_101384549.projectui.ui.reservations.BookingConfirmationFragment" />
+</navigation>
