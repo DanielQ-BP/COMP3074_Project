@@ -23,14 +23,14 @@ class LoginActivity : AppCompatActivity() {
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish() // Prevent back to login
+                finish()
             } else {
                 Toast.makeText(this, "Please enter credentials", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Add logout button (back to welcome screen)
         val logoutButton: Button = binding.logoutButton
         logoutButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
