@@ -20,7 +20,7 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                Toast.makeText(this, "Login successful (Prototype)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()

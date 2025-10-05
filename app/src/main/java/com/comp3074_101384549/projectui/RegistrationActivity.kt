@@ -20,7 +20,7 @@ class RegistrationActivity : AppCompatActivity() {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                Toast.makeText(this, "Registration successful (Prototype)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Registration successful, please login", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             } else {
