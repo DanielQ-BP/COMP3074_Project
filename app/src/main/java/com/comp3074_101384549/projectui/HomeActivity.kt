@@ -14,6 +14,5 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Add your home logic here later, e.g., navigation setup
     }
 }

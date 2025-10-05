@@ -10,6 +10,5 @@
         android:layout_height="wrap_content"
         android:text="Welcome to ParkSpot Home (Prototype)" />
 
-    <!-- Add your home UI here later -->
 
 </LinearLayout>

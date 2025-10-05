@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Login successful (Prototype)", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
-                finish()  // Optional: Prevent back to login
+                finish()
             } else {
                 Toast.makeText(this, "Please enter credentials", Toast.LENGTH_SHORT).show()
             }
