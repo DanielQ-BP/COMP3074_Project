@@ -6,16 +6,23 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register as New User" />
+        android:hint="Username" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/loginSkipButton"
+        android:id="@+id/registerConfirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already a User? Login" />
+        android:text="Register" />
 
 </LinearLayout>
