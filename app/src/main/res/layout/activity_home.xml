@@ -3,12 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to ParkSpot Home (Prototype)" />
+        android:text="Welcome to ParkSpot Home (Prototype)"
+        android:layout_marginBottom="16dp" />
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to Login"
+        android:backgroundTint="#9E9E9E" /> <!-- Gray button -->
 
 </LinearLayout>

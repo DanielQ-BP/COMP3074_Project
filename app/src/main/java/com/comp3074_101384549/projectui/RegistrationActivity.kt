@@ -18,13 +18,14 @@ class RegistrationActivity : AppCompatActivity() {
 
         binding.registerConfirmButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString()
+            val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-            if (username.isNotEmpty() && password.isNotEmpty()) {
+            if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 Toast.makeText(this, "Registration successful, please login", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Please enter credentials", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter username, email, and password", Toast.LENGTH_SHORT).show()
             }
         }
     }

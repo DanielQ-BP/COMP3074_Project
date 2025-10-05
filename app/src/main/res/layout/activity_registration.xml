@@ -10,19 +10,30 @@
         android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username" />
+        android:hint="Username"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="8dp" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/registerConfirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register" />
+        android:text="Register"
+        android:backgroundTint="#4CAF50" /> <!-- Green button for prototype feel -->
 
 </LinearLayout>
