@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/profileImage"
             android:src="@android:drawable/sym_def_app_icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -17,27 +19,103 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
+            android:id="@+id/usernameTextView"
             android:text="John Doe"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
 
         <RatingBar
+            android:id="@+id/ratingBar"
             android:numStars="5"
             android:rating="4.5"
             android:isIndicator="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:id="@+id/readOnlyContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/nameReadOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name: –"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/ageReadOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Age: –"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/descriptionReadOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description: –"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/editContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/ageEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Age"
+                android:inputType="number"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save Profile"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="#4CAF50" />
+        </LinearLayout>
 
         <Button
+            android:id="@+id/editProfileButton"
             android:text="Edit Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
         <Button
+            android:id="@+id/settingsButton"
             android:text="Settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

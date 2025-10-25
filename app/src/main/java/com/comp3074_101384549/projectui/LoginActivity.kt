@@ -1,5 +1,6 @@
 package com.comp3074_101384549.projectui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -21,7 +22,14 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                // Save username to SharedPreferences for profile use
+                val sharedPref = getSharedPreferences("ParkSpotPrefs", Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putString("username", username)
+                    apply()
+                }
+
+                Toast.makeText(this, "Login successful (Prototype)", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
