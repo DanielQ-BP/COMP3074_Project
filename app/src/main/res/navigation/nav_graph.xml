@@ -11,4 +11,5 @@
     <fragment android:id="@+id/listingDetailsFragment" android:name="com.comp3074_101384549.projectui.ui.listings.ListingDetailsFragment" />
     <fragment android:id="@+id/paymentFragment" android:name="com.comp3074_101384549.projectui.ui.payment.PaymentFragment" />
     <fragment android:id="@+id/bookingConfirmationFragment" android:name="com.comp3074_101384549.projectui.ui.reservations.BookingConfirmationFragment" />
+    <fragment android:id="@+id/myListingsFragment" android:name="com.comp3074_101384549.projectui.ui.listings.MyListingsFragment" android:label="My Listings" />
 </navigation>
