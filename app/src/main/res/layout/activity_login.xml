@@ -26,13 +26,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:backgroundTint="#2196F3" /> <!-- Blue button -->
+        android:backgroundTint="#2196F3" />
 
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
-        android:backgroundTint="#F44336" /> <!-- Red button -->
+        android:backgroundTint="#F44336" />
 
 </LinearLayout>

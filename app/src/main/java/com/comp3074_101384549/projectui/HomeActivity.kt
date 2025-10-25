@@ -45,7 +45,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // Handle side drawer menu clicks
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_profile -> {
