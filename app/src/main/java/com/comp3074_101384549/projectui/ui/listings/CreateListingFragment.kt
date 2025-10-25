@@ -50,8 +50,8 @@ class CreateListingFragment : Fragment() {
                 ListingRepository.addListing(newListing)
 
                 Toast.makeText(requireContext(), "Listing created!", Toast.LENGTH_SHORT).show()
-
-                findNavController().navigate(R.id.myListingsFragment)
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+                // findNavController().navigate(R.id.myListingsFragment)
 
             } catch (e: Exception) {
                 Log.e("CreateListingFragment", "Crash during listing creation", e)

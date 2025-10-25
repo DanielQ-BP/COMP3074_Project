@@ -8,10 +8,14 @@
         android:title="Settings" />
     <item
         android:id="@+id/nav_listings_created"
-        android:title="Listings created" />
+        android:title="Create Listing" />
     <item
         android:id="@+id/nav_listings_reserved"
         android:title="Listings reserved" />
+    <item
+        android:id="@+id/nav_my_listings"
+        android:title="MyListings">
+    </item>
     <item
         android:id="@+id/nav_payment_methods"
         android:title="Payment methods" />

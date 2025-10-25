@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat
 import com.comp3074_101384549.projectui.databinding.ActivityHomeBinding
 import com.comp3074_101384549.projectui.ui.home.HomeFragment
 import com.comp3074_101384549.projectui.ui.listings.CreateListingFragment
+import com.comp3074_101384549.projectui.ui.listings.MyListingsFragment
 import com.comp3074_101384549.projectui.ui.payment.PaymentFragment
 import com.comp3074_101384549.projectui.ui.profile.ProfileFragment
 import com.comp3074_101384549.projectui.ui.reservations.ReservedListingsFragment
@@ -63,6 +64,12 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_listings_reserved -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.homeFragmentContainer, ReservedListingsFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+                R.id.nav_my_listings -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.homeFragmentContainer, MyListingsFragment())
                         .addToBackStack(null)
                         .commit()
                 }
