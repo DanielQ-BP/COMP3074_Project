@@ -88,11 +88,7 @@ class ProfileFragment : Fragment() {
                 "Profile saved (Prototype)", Toast.LENGTH_SHORT).show()
         }
 
-        // Settings (optional)
-        binding.settingsButton.setOnClickListener {
-            Toast.makeText(requireContext(),
-                "Settings – not implemented yet", Toast.LENGTH_SHORT).show()
-        }
+
     }
 
     override fun onDestroyView() {
