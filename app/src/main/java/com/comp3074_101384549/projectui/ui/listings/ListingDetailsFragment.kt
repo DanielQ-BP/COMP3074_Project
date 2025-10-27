@@ -22,7 +22,7 @@ class ListingDetailsFragment : Fragment() {
         val reserveButton = view.findViewById<Button>(R.id.buttonReserve)
         reserveButton.setOnClickListener {
             Toast.makeText(requireContext(), "Navigating to payment...", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.paymentFragment)
+            //findNavController().navigate(R.id.paymentFragment)
         }
     }
 }
