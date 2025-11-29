@@ -1,6 +1,5 @@
 package com.comp3074_101384549.projectui
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -21,21 +20,42 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Load default fragment on first open
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.homeFragmentContainer, HomeFragment())
-                .commit()
+            openFragment(HomeFragment())
         }
 
+        setupBottomNavigation()
+        setupDrawerNavigation()
+    }
+
+    // ------------------------ Fragment Navigation Functions ------------------------
+
+    private fun openFragment(fragment: androidx.fragment.app.Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.homeFragmentContainer, fragment)
+            .commit()
+    }
+
+    private fun openFragmentWithBackstack(fragment: androidx.fragment.app.Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.homeFragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // ------------------------ Bottom Navigation ------------------------
+
+    private fun setupBottomNavigation() {
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, HomeFragment())
-                        .commit()
+                    openFragment(HomeFragment())
                     true
                 }
                 R.id.addFragment -> {
+                    // If "Add" should show CreateListing screen
+                    openFragmentWithBackstack(CreateListingFragment())
                     true
                 }
                 R.id.drawerMenu -> {
@@ -45,46 +65,38 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
 
+    // ------------------------ Drawer Navigation ------------------------
+
+    private fun setupDrawerNavigation() {
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_profile -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, ProfileFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                R.id.nav_listings_created -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, CreateListingFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                R.id.nav_listings_reserved -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, ReservedListingsFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                R.id.nav_my_listings -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, MyListingsFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                R.id.nav_payment_methods -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.homeFragmentContainer, PaymentFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                R.id.nav_help -> {
 
+                R.id.nav_profile ->
+                    openFragmentWithBackstack(ProfileFragment())
+
+                R.id.nav_listings_created ->
+                    openFragmentWithBackstack(CreateListingFragment())
+
+                R.id.nav_listings_reserved ->
+                    openFragmentWithBackstack(ReservedListingsFragment())
+
+                R.id.nav_my_listings ->
+                    openFragmentWithBackstack(MyListingsFragment())
+
+                R.id.nav_payment_methods ->
+                    openFragmentWithBackstack(PaymentFragment())
+
+                R.id.nav_help -> {
+                    // TODO: Add Help page later if needed
                 }
+
                 R.id.nav_logout -> {
                     finish()
                 }
             }
+
             binding.drawerLayout.closeDrawer(GravityCompat.END)
             true
         }
