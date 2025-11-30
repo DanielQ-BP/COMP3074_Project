@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.comp3074_101384549.projectui.R
 import com.comp3074_101384549.projectui.model.Listing
 
-class ListingAdapter(private val listings: List<Listing>) :
+class ListingAdapter(private var listings: List<Listing>) :
     RecyclerView.Adapter<ListingAdapter.ListingViewHolder>() {
 
     class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,9 +26,18 @@ class ListingAdapter(private val listings: List<Listing>) :
     override fun onBindViewHolder(holder: ListingViewHolder, position: Int) {
         val listing = listings[position]
         holder.address.text = listing.address
-        holder.price.text = "Price: \$${listing.price}"
+        holder.price.text = "Price: \$${listing.pricePerHour}"
         holder.availability.text = "Available: ${listing.availability}"
     }
 
     override fun getItemCount(): Int = listings.size
+
+    /**
+     * Replaces the adapter's data set with a new list and refreshes the RecyclerView.
+     * This is called from the Fragment's Coroutine Scope after fetching data.
+     */
+    fun updateListings(newListings: List<Listing>) {
+        this.listings = newListings
+        notifyDataSetChanged()
+    }
 }

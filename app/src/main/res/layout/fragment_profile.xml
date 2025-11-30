@@ -12,6 +12,13 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp">
 
+        <Button
+            android:text="Settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</ScrollView>
         <LinearLayout
             android:orientation="vertical"
             android:padding="24dp"
@@ -29,6 +36,15 @@
                 app:shapeAppearanceOverlay="@style/RoundedCorner"
                 app:strokeColor="#DDDDDD"
                 app:strokeWidth="2dp" />
+
+            <!-- NEW: Change photo button -->
+            <Button
+                android:id="@+id/btnChangePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:text="Change Photo" />
 
             <TextView
                 android:id="@+id/usernameTextView"
@@ -64,12 +80,14 @@
                     android:layout_marginBottom="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:src="@android:drawable/ic_menu_info_details"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
                         app:tint="#666666" />
+
                     <TextView
                         android:id="@+id/nameReadOnly"
                         android:layout_width="0dp"
@@ -86,12 +104,14 @@
                     android:layout_marginBottom="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:src="@android:drawable/ic_menu_my_calendar"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
                         app:tint="#666666" />
+
                     <TextView
                         android:id="@+id/ageReadOnly"
                         android:layout_width="0dp"
@@ -108,12 +128,14 @@
                     android:layout_marginBottom="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:src="@android:drawable/ic_menu_edit"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
                         app:tint="#666666" />
+
                     <TextView
                         android:id="@+id/descriptionReadOnly"
                         android:layout_width="0dp"
@@ -137,6 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/nameEditText"
                         android:layout_width="match_parent"
@@ -149,6 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ageEditText"
                         android:layout_width="match_parent"
@@ -162,6 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/descriptionEditText"
                         android:layout_width="match_parent"
@@ -189,8 +214,9 @@
                 android:layout_marginTop="16dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:textColor="#6A1B9A" />
-
-
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </ScrollView>
