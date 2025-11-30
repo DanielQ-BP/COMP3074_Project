@@ -79,7 +79,6 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
-                        android:contentDescription="@string/profile_image_desc"
                         app:tint="#666666" />
 
                     <TextView
@@ -104,7 +103,6 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
-                        android:contentDescription="@string/profile_image_desc"
                         app:tint="#666666" />
 
                     <TextView
@@ -129,7 +127,6 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
-                        android:contentDescription="@string/profile_image_desc"
                         app:tint="#666666" />
 
                     <TextView
