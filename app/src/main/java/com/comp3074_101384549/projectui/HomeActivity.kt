@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import com.comp3074_101384549.projectui.ui.listings.MyListingsFragment
 import com.comp3074_101384549.projectui.ui.payment.PaymentFragment
 import com.comp3074_101384549.projectui.ui.profile.ProfileFragment
 import com.comp3074_101384549.projectui.ui.reservations.ReservedListingsFragment
+import com.comp3074_101384549.projectui.ui.settings.SettingsFragment
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
@@ -22,19 +24,38 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var authPreferences: AuthPreferences
 
+    private val THEME_PREFS = "AppThemePrefs"
+    private val KEY_THEME_MODE = "theme_mode"
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // ✅ Apply saved theme before setting content view
+        applySavedTheme()
+
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Auth preferences
         authPreferences = AuthPreferences(applicationContext)
 
+        // Set up bottom navigation + drawer menu
         setupBottomNav()
         setupDrawerMenu()
 
+        // Show Home fragment the first time
         if (savedInstanceState == null) {
             openFragment(HomeFragment())
             binding.bottomNav.selectedItemId = R.id.homeFragment
+        }
+    }
+
+    private fun applySavedTheme() {
+        val prefs = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
+        val mode = prefs.getString(KEY_THEME_MODE, "light")
+        if (mode == "dark") {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
 
@@ -92,6 +113,13 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
 
+                // ✅ NEW: Settings
+                R.id.nav_settings -> {
+                    openFragment(SettingsFragment())
+                    binding.drawerLayout.closeDrawers()
+                    true
+                }
+
                 R.id.nav_logout -> {
                     performLogout()
                     binding.drawerLayout.closeDrawers()
@@ -118,7 +146,6 @@ class HomeActivity : AppCompatActivity() {
             .replace(R.id.homeFragmentContainer, fragment)
             .commit()
     }
-
 
     private fun performLogout() {
         lifecycleScope.launch {

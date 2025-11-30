@@ -5,7 +5,8 @@
         android:title="Profile" />
     <item
         android:id="@+id/nav_settings"
-        android:title="Settings" />
+        android:title="Settings"
+        android:icon="@android:drawable/ic_menu_manage" />
     <item
         android:id="@+id/nav_listings_created"
         android:title="Create Listing" />

@@ -53,10 +53,17 @@ class LoginActivity : AppCompatActivity() {
                     // 2. Save the token and ID on success (NEW)
                     authPreferences.saveAuthDetails(token, dummyUserId)
 
-                    // 3. Navigate to the main application
+// ✅ Also save the username for the Profile screen
+                    val profilePrefs = getSharedPreferences("ParkSpotPrefs", MODE_PRIVATE)
+                    profilePrefs.edit()
+                        .putString("username", username)
+                        .apply()
+
+// 3. Navigate to the main application
                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
+
                 } catch (e: Exception) {
                     Toast.makeText(this@LoginActivity, "Login failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
