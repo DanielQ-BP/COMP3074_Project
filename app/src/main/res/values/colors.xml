@@ -9,6 +9,8 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
 
+    <color name="purple_200">@color/parkspot_green</color>
+
     <color name="purple_500">@color/parkspot_green</color>
     <color name="purple_700">@color/parkspot_dark_green</color>
     <color name="teal_200">@color/parkspot_green</color>

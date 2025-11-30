@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-<<<<<<< Updated upstream
 
     <fragment android:id="@+id/homeFragment" android:name="com.comp3074_101384549.projectui.ui.home.HomeFragment" />
     <fragment android:id="@+id/reservedListingsFragment" android:name="com.comp3074_101384549.projectui.ui.reservations.ReservedListingsFragment" />
@@ -77,4 +77,3 @@
 
 </navigation>
 
->>>>>>> Stashed changes

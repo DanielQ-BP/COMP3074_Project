@@ -62,17 +62,14 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-<<<<<<< Updated upstream
         // Handle side drawer menu clicks
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-=======
     private fun setupDrawerMenu() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 
                 // Profile
->>>>>>> Stashed changes
                 R.id.nav_profile -> {
                     openFragment(ProfileFragment())
                     binding.drawerLayout.closeDrawers()

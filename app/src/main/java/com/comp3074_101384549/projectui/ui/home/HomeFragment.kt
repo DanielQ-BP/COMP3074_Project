@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.comp3074_101384549.projectui.R
 import com.comp3074_101384549.projectui.databinding.FragmentHomeBinding
-<<<<<<< Updated upstream
-=======
 import android.content.Context
 import com.comp3074_101384549.projectui.data.local.AppDatabase
 import com.comp3074_101384549.projectui.data.remote.ApiService
@@ -22,7 +21,7 @@ import com.comp3074_101384549.projectui.model.Listing
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
->>>>>>> Stashed changes
+import com.comp3074_101384549.projectui.repository.ListingRepository
 
 class HomeFragment : Fragment() {
 
@@ -60,11 +59,16 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-<<<<<<< Updated upstream
+        val addressInput = view.findViewById<EditText>(R.id.editTextAddress)
+        val maxPriceInput = view.findViewById<EditText>(R.id.editTextMaxPrice)
         val searchButton = view.findViewById<Button>(R.id.buttonSearch)
+        val listView = view.findViewById<ListView>(R.id.listViewListings)
+
+        // Load all listings
+        updateListings(listView, ListingRepository.getAllListings())
+
         searchButton.setOnClickListener {
             Toast.makeText(requireContext(), "Search clicked!", Toast.LENGTH_SHORT).show()
-=======
         super.onViewCreated(view, savedInstanceState) // Always call super in onViewCreated
 
         val addressInput = view.findViewById<EditText>(R.id.editTextAddress)
@@ -93,15 +97,23 @@ class HomeFragment : Fragment() {
                     updateListings(listView, results)
                 }
             }
->>>>>>> Stashed changes
-        }
 
-<<<<<<< Updated upstream
+            val results = ListingRepository.searchListings(address, maxPrice)
+
+            if (results.isEmpty()) {
+                Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
+                updateListings(listView, emptyList())
+            } else {
+                Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
+                updateListings(listView, results)
+            }
+        }
+    }
+
         val listView = view.findViewById<ListView>(R.id.listViewListings)
         val dummyListings = listOf("860 Bordigon Trail - $4/hr", "12 Willow St. - $7/hr")
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, dummyListings)
-=======
     override fun onResume() {
         super.onResume()
         view?.let {
@@ -124,7 +136,14 @@ class HomeFragment : Fragment() {
     private fun updateListings(listView: ListView, listings: List<Listing>) {
         val displayList = listings.map { "${it.address} - $${it.pricePerHour}/hr" } // Changed to pricePerHour based on Repository
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, displayList)
->>>>>>> Stashed changes
+
+            updateListings(listView, ListingRepository.getAllListings())
+        }
+    }
+
+    private fun updateListings(listView: ListView, listings: List<com.comp3074_101384549.projectui.model.Listing>) {
+        val displayList = listings.map { "${it.address} - $${it.price}/hr" }
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, displayList)
         listView.adapter = adapter
     }
 
