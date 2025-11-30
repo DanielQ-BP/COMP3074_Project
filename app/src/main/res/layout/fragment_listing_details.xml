@@ -19,14 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:text="Address: 123 Main St"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textPrice"
             android:layout_width="match_parent"
             android:layout_height="31dp"
             android:text="Price/hour: $5"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textAvailability"

@@ -14,16 +14,17 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:autofillHints=""
-            android:inputType=""
+            android:inputType="textPostalAddress"
             tools:ignore="LabelFor" />
 
         <EditText
             android:id="@+id/editTextPrice"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:autofillHints=""
             android:hint="@string/price_hour"
-            android:inputType="" />
+            android:inputType="numberDecimal"
+            android:autofillHints=""
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/editTextAvailability"
@@ -31,7 +32,7 @@
             android:layout_height="64dp"
             android:autofillHints=""
             android:hint="@string/availability"
-            android:inputType="" />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/editTextTimeWindow"
@@ -39,7 +40,7 @@
             android:layout_height="55dp"
             android:hint="@string/time_window_picker"
             android:importantForAutofill="no"
-            android:inputType="" />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/editTextDescription"
@@ -47,7 +48,7 @@
             android:layout_height="60dp"
             android:autofillHints=""
             android:hint="@string/description"
-            android:inputType="" />
+            android:inputType="textMultiLine" />
 
         <Switch
             android:id="@+id/switchActive"

@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +11,8 @@
         <EditText
             android:id="@+id/editTextAddress"
             android:hint="Destination / Address"
+            android:inputType="textPostalAddress"
+            android:autofillHints="postalAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -22,6 +24,9 @@
             <EditText
                 android:id="@+id/editTextDateTime"
                 android:hint="Date &amp; Time"
+                android:inputType="datetime"
+                android:autofillHints=""
+                android:importantForAutofill="no"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
@@ -29,6 +34,9 @@
             <EditText
                 android:id="@+id/editTextMaxPrice"
                 android:hint="Max Price"
+                android:inputType="numberDecimal"
+                android:autofillHints=""
+                android:importantForAutofill="no"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
@@ -54,10 +62,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listViewListings"
             android:layout_width="match_parent"
-            android:layout_height="251dp"
-            android:layout_marginTop="8dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
