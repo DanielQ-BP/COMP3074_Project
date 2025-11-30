@@ -17,17 +17,14 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    // SharedPreferences keys
     private val PREFS_NAME = "ParkSpotPrefs"
     private val KEY_USERNAME = "username"
     private val KEY_PROFILE_IMAGE_URI = "profile_image_uri"
 
     private lateinit var prefs: SharedPreferences
 
-    // Store selected image URI (current session)
     private var selectedImageUri: Uri? = null
 
-    // Gallery picker - lets user choose an image
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
@@ -39,7 +36,6 @@ class ProfileFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // Initialize SharedPreferences once
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
@@ -54,14 +50,11 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Load profile text + image
         loadProfile()
         loadProfileImage()
 
-        // By default, Change Photo button is hidden (only visible in edit mode)
         binding.btnChangePhoto.visibility = View.GONE
 
-        // Change photo: open gallery
         binding.btnChangePhoto.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
@@ -71,7 +64,6 @@ class ProfileFragment : Fragment() {
             binding.editContainer.visibility = View.VISIBLE
             binding.editProfileButton.visibility = View.GONE
 
-            // Now allow changing the photo as well
             binding.btnChangePhoto.visibility = View.VISIBLE
         }
 
@@ -107,7 +99,7 @@ class ProfileFragment : Fragment() {
 
             Toast.makeText(
                 requireContext(),
-                "Profile saved (Prototype)",
+                "Profile saved",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -144,9 +136,8 @@ class ProfileFragment : Fragment() {
                 selectedImageUri = uri
                 binding.profileImage.setImageURI(uri)
             } catch (e: Exception) {
-                // If we fail to load (e.g. no permission anymore), just clear it and use default
                 prefs.edit().remove(KEY_PROFILE_IMAGE_URI).apply()
-                // profileImage will keep the default src from XML
+
             }
         }
     }
