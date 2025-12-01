@@ -1,10 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_profile" android:title="Profile"/>
-    <item android:id="@+id/nav_settings" android:title="Settings"/>
-    <item android:id="@+id/nav_listings_created" android:title="Create Listing"/>
-    <item android:id="@+id/nav_listings_reserved" android:title="Listings reserved"/>
-    <item android:id="@+id/nav_my_listings" android:title="MyListings"> </item>
-    <item android:id="@+id/nav_payment_methods" android:title="Payment methods"/>
-    <item android:id="@+id/nav_logout" android:title="Logout"/>
-    <item android:id="@+id/nav_help" android:title="Support / help"/>
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile" />
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/nav_listings_created"
+        android:title="Create Listing" />
+    <item
+        android:id="@+id/nav_listings_reserved"
+        android:title="Listings reserved" />
+    <item
+        android:id="@+id/nav_my_listings"
+        android:title="MyListings">
+    </item>
+    <item
+        android:id="@+id/nav_payment_methods"
+        android:title="Payment methods" />
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout" />
+    <item
+        android:id="@+id/nav_help"
+        android:title="Support / help" />
 </menu>
