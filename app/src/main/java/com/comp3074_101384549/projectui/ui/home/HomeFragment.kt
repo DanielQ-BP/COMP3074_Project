@@ -127,6 +127,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 } else {
                     Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
                     updateListings(results)
+
                 }
             }
         }
