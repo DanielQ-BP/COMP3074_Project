@@ -24,10 +24,12 @@ class ProfileFragment : Fragment() {
 
     private lateinit var prefs: SharedPreferences
 
+
     // Store selected image URI (current session)
     private var selectedImageUri: Uri? = null
 
-    // Gallery picker - lets user choose an image
+
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
@@ -62,6 +64,7 @@ class ProfileFragment : Fragment() {
         binding.btnChangePhoto.visibility = View.GONE
 
         // Change photo: open gallery
+
         binding.btnChangePhoto.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
@@ -72,6 +75,7 @@ class ProfileFragment : Fragment() {
             binding.editProfileButton.visibility = View.GONE
 
             // Now allow changing the photo as well
+
             binding.btnChangePhoto.visibility = View.VISIBLE
         }
 
@@ -101,6 +105,9 @@ class ProfileFragment : Fragment() {
             binding.readOnlyContainer.visibility = View.VISIBLE
             binding.editContainer.visibility = View.GONE
             binding.editProfileButton.visibility = View.VISIBLE
+            binding.btnChangePhoto.visibility = View.GONE
+
+            // Hide photo change button when leaving edit mode
             binding.btnChangePhoto.visibility = View.GONE
 
             loadProfile()
@@ -149,6 +156,7 @@ class ProfileFragment : Fragment() {
                 // profileImage will keep the default src from XML
             }
         }
+
     }
 
     override fun onDestroyView() {

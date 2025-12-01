@@ -68,4 +68,5 @@ class ListingRepository @Inject constructor(
         // 2. Send to remote API
         apiService.createListing(listing)
     }
+
 }
