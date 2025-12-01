@@ -71,7 +71,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -111,7 +110,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val searchButton = view.findViewById<Button>(R.id.buttonSearch)
 
         // Load all listings on startup
-        // FIX 1: Must be called inside a coroutine scope
+
         loadAllListings()
 
 
@@ -120,9 +119,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val maxPrice = maxPriceInput.text.toString().toDoubleOrNull()
 
             // Perform search
-            // FIX 2: Must be called inside a coroutine scope
-
-
             lifecycleScope.launch {
                 val results = listingRepository.searchListings(address, maxPrice)
 
