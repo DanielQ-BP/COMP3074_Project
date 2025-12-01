@@ -129,10 +129,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
                 if (results.isEmpty()) {
                     Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, emptyList())
+                    updateListings(emptyList())
                 } else {
                     Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, results)
+                    updateListings(results)
 
                 }
             }
