@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -51,10 +52,21 @@ class ListingDetailsFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
-        setupButtons(view)
-
+        // Get listing data from arguments
         val address = arguments?.getString("address") ?: "123 Main St"
+        val price = arguments?.getDouble("price") ?: 0.0
+        val availability = arguments?.getString("availability") ?: "N/A"
+        val description = arguments?.getString("description") ?: "No description"
+
+        // Display listing data
+        view.findViewById<TextView>(R.id.textAddress)?.text = "Address: $address"
+        view.findViewById<TextView>(R.id.textPrice)?.text = "Price: $$price/hour"
+        view.findViewById<TextView>(R.id.textAvailability)?.text = "Available: $availability"
+        view.findViewById<TextView>(R.id.textDescription)?.text = description
+
         destinationLatLng = MapUtils.getLatLngFromAddress(requireContext(), address)
+
+        setupButtons(view)
     }
 
     private fun setupButtons(view: View) {

@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import com.comp3074_101384549.projectui.databinding.FragmentHomeBinding
 import com.comp3074_101384549.projectui.model.Listing
 import com.comp3074_101384549.projectui.repository.ListingRepository
 import com.comp3074_101384549.projectui.ui.adapter.ListingAdapter
+import com.comp3074_101384549.projectui.ui.listings.ListingDetailsFragment
 import com.comp3074_101384549.projectui.utils.MapUtils
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -77,7 +79,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
-        listingAdapter = ListingAdapter(emptyList())
+        listingAdapter = ListingAdapter(emptyList()) { listing ->
+            // When a listing is clicked, navigate to details fragment
+            val detailsFragment = ListingDetailsFragment().apply {
+                arguments = bundleOf(
+                    "address" to listing.address,
+                    "price" to listing.pricePerHour,
+                    "availability" to listing.availability,
+                    "description" to listing.description
+                )
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.homeFragmentContainer, detailsFragment)
+                .addToBackStack(null)
+                .commit()
+        }
         val recyclerView = view.findViewById<RecyclerView>(R.id.listViewListings)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = listingAdapter

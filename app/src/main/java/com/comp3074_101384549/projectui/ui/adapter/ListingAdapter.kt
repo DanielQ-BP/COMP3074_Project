@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.comp3074_101384549.projectui.R
 import com.comp3074_101384549.projectui.model.Listing
 
-class ListingAdapter(private var listings: List<Listing>) :
-    RecyclerView.Adapter<ListingAdapter.ListingViewHolder>() {
+class ListingAdapter(
+    private var listings: List<Listing>,
+    private val onListingClick: (Listing) -> Unit
+) : RecyclerView.Adapter<ListingAdapter.ListingViewHolder>() {
 
     class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val address: TextView = itemView.findViewById(R.id.textAddress)
@@ -29,6 +31,10 @@ class ListingAdapter(private var listings: List<Listing>) :
         holder.address.text = listing.address
         holder.price.text = "Price: \$${listing.pricePerHour}"
         holder.availability.text = "Available: ${listing.availability}"
+
+        holder.itemView.setOnClickListener {
+            onListingClick(listing)
+        }
     }
 
     override fun getItemCount(): Int = listings.size
