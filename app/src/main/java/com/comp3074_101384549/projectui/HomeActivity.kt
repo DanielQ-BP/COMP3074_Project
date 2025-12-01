@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import com.comp3074_101384549.projectui.ui.listings.MyListingsFragment
 import com.comp3074_101384549.projectui.ui.payment.PaymentFragment
 import com.comp3074_101384549.projectui.ui.profile.ProfileFragment
 import com.comp3074_101384549.projectui.ui.reservations.ReservedListingsFragment
+import com.comp3074_101384549.projectui.ui.settings.SettingsFragment
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
@@ -22,22 +24,35 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var authPreferences: AuthPreferences
 
+    private val THEME_PREFS = "AppThemePrefs"
+    private val KEY_THEME_MODE = "theme_mode"
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply saved theme before inflating
+        applySavedTheme()
+
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Auth preferences
         authPreferences = AuthPreferences(applicationContext)
 
-        // Set up bottom navigation + drawer menu
         setupBottomNav()
         setupDrawerMenu()
 
-        // Show Home fragment the first time
         if (savedInstanceState == null) {
             openFragment(HomeFragment())
             binding.bottomNav.selectedItemId = R.id.homeFragment
+        }
+    }
+
+    private fun applySavedTheme() {
+        val prefs = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
+        val mode = prefs.getString(KEY_THEME_MODE, "light")
+        if (mode == "dark") {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
 
@@ -49,7 +64,6 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.addFragment -> {
-                    // Use the same Create Listing fragment as the drawer item
                     openFragment(CreateListingFragment())
                     true
                 }
@@ -66,49 +80,49 @@ class HomeActivity : AppCompatActivity() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 
-                // Profile
                 R.id.nav_profile -> {
                     openFragment(ProfileFragment())
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // "Create Listing"
                 R.id.nav_listings_created -> {
                     openFragment(CreateListingFragment())
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // "Listings reserved"
                 R.id.nav_listings_reserved -> {
                     openFragment(ReservedListingsFragment())
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // "MyListings"
                 R.id.nav_my_listings -> {
                     openFragment(MyListingsFragment())
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // "Payment methods"
                 R.id.nav_payment_methods -> {
                     openFragment(PaymentFragment())
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // Logout
+                // ⭐ Settings
+                R.id.nav_settings -> {
+                    openFragment(SettingsFragment())
+                    binding.drawerLayout.closeDrawers()
+                    true
+                }
+
                 R.id.nav_logout -> {
                     performLogout()
                     binding.drawerLayout.closeDrawers()
                     true
                 }
 
-                // "Support / help" – placeholder
                 R.id.nav_help -> {
                     Toast.makeText(
                         this,
@@ -130,15 +144,10 @@ class HomeActivity : AppCompatActivity() {
             .commit()
     }
 
-    /**
-     * Clears the user session and redirects to the splash screen (MainActivity).
-     */
     private fun performLogout() {
         lifecycleScope.launch {
-            // Clear stored auth details
             authPreferences.clearAuthDetails()
 
-            // Go back to the splash / main screen
             val intent = Intent(this@HomeActivity, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
