@@ -112,7 +112,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         // Load all listings on startup
         // FIX 1: Must be called inside a coroutine scope
-        loadAllListings(listView)
+        loadAllListings()
 
 
         searchButton.setOnClickListener {
