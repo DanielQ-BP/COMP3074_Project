@@ -71,24 +71,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val db = AppDatabase.getDatabase(context)
-        val listingDao = db.listingDao()
-
-        // TODO: replace with your real backend base URL when ready
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://example.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
-
-        listingRepository = ListingRepository(apiService, listingDao)
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -128,8 +110,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val searchButton = view.findViewById<Button>(R.id.buttonSearch)
 
         // Load all listings on startup
-        // FIX 1: Must be called inside a coroutine scope
-        loadAllListings(listView)
+        loadAllListings()
 
 
         searchButton.setOnClickListener {
@@ -137,19 +118,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val maxPrice = maxPriceInput.text.toString().toDoubleOrNull()
 
             // Perform search
-            // FIX 2: Must be called inside a coroutine scope
-
-
             lifecycleScope.launch {
                 val results = listingRepository.searchListings(address, maxPrice)
 
                 if (results.isEmpty()) {
                     Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, emptyList())
+                    updateListings(emptyList())
                 } else {
                     Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, results)
-
+                    updateListings(results)
                 }
             }
         }
