@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.comp3074_101384549.projectui.data.local.AuthPreferences
 import com.comp3074_101384549.projectui.databinding.ActivityLoginBinding
+import com.comp3074_101384549.projectui.data.remote.ApiService
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authPreferences: AuthPreferences
+
+    // In a Hilt setup, this would be @Inject lateInit var
+    private lateinit var apiService: ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,21 +29,6 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-<<<<<<< Updated upstream
-            if (username.isNotEmpty() && password.isNotEmpty()) {
-                // Save username to SharedPreferences for profile use
-                val sharedPref = getSharedPreferences("ParkSpotPrefs", Context.MODE_PRIVATE)
-                with(sharedPref.edit()) {
-                    putString("username", username)
-                    apply()
-                }
-
-                Toast.makeText(this, "Login successful (Prototype)", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-=======
 
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please enter both fields", Toast.LENGTH_SHORT).show()
@@ -56,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     // Save session details
                     authPreferences.saveAuthDetails(
-                        token = "dummy_token_123", 
+                        token = "dummy_token_123",
                         userId = username,
                         username = username,
                         email = storedEmail ?: ""
@@ -73,7 +62,6 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                     finish()
                 }
->>>>>>> Stashed changes
             } else {
                 Toast.makeText(this, "Invalid Username or Password", Toast.LENGTH_SHORT).show()
             }

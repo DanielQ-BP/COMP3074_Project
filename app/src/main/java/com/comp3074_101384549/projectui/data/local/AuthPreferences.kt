@@ -20,8 +20,8 @@ class AuthPreferences(private val context: Context) {
     private object Keys {
         val AUTH_TOKEN = stringPreferencesKey("auth_token")
         val USER_ID = stringPreferencesKey("user_id")
-        val USERNAME = stringPreferencesKey("username") // Add this
-        val EMAIL = stringPreferencesKey("email")       // Add this
+        val USERNAME = stringPreferencesKey("username")
+        val EMAIL = stringPreferencesKey("email")
     }
 
     val authToken: Flow<String?> = context.dataStore.data

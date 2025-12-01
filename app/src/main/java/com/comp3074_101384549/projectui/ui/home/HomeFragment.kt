@@ -1,36 +1,49 @@
 package com.comp3074_101384549.projectui.ui.home
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.comp3074_101384549.projectui.R
-import com.comp3074_101384549.projectui.databinding.FragmentHomeBinding
-import android.content.Context
 import com.comp3074_101384549.projectui.data.local.AppDatabase
 import com.comp3074_101384549.projectui.data.remote.ApiService
-import com.comp3074_101384549.projectui.repository.ListingRepository
+import com.comp3074_101384549.projectui.databinding.FragmentHomeBinding
 import com.comp3074_101384549.projectui.model.Listing
+import com.comp3074_101384549.projectui.repository.ListingRepository
+import com.comp3074_101384549.projectui.ui.adapter.ListingAdapter
+import com.comp3074_101384549.projectui.utils.MapUtils
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.comp3074_101384549.projectui.repository.ListingRepository
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var listingRepository: ListingRepository
-
-    // If not using DI, you would need to instantiate or provide it here.
-
+    private var googleMap: GoogleMap? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var listingAdapter: ListingAdapter
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1002
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,92 +72,111 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val addressInput = view.findViewById<EditText>(R.id.editTextAddress)
-        val maxPriceInput = view.findViewById<EditText>(R.id.editTextMaxPrice)
-        val searchButton = view.findViewById<Button>(R.id.buttonSearch)
-        val listView = view.findViewById<ListView>(R.id.listViewListings)
+        super.onViewCreated(view, savedInstanceState)
 
-        // Load all listings
-        updateListings(listView, ListingRepository.getAllListings())
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
 
-        searchButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Search clicked!", Toast.LENGTH_SHORT).show()
-        super.onViewCreated(view, savedInstanceState) // Always call super in onViewCreated
+        listingAdapter = ListingAdapter(emptyList())
+        val recyclerView = view.findViewById<RecyclerView>(R.id.listViewListings)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = listingAdapter
 
         val addressInput = view.findViewById<EditText>(R.id.editTextAddress)
         val maxPriceInput = view.findViewById<EditText>(R.id.editTextMaxPrice)
         val searchButton = view.findViewById<Button>(R.id.buttonSearch)
-        val listView = view.findViewById<ListView>(R.id.listViewListings)
 
-        // Load all listings on startup
-        // FIX 1: Must be called inside a coroutine scope
-        loadAllListings(listView)
+        loadAllListings()
 
         searchButton.setOnClickListener {
             val address = addressInput.text.toString().trim()
             val maxPrice = maxPriceInput.text.toString().toDoubleOrNull()
 
-            // Perform search
-            // FIX 2: Must be called inside a coroutine scope
             lifecycleScope.launch {
                 val results = listingRepository.searchListings(address, maxPrice)
 
                 if (results.isEmpty()) {
                     Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, emptyList())
+                    updateListings(emptyList())
                 } else {
                     Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
-                    updateListings(listView, results)
+                    updateListings(results)
+                }
+            }
+        }
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map.isMyLocationEnabled = true
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+
+        val defaultLocation = LatLng(43.6532, -79.3832)
+        MapUtils.moveCameraToPosition(map, defaultLocation, 12f)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadAllListings()
+    }
+
+    private fun loadAllListings() {
+        lifecycleScope.launch {
+            val listings = listingRepository.getAllListings()
+            updateListings(listings)
+        }
+    }
+
+    private fun updateListings(listings: List<Listing>) {
+        listingAdapter.updateListings(listings)
+
+        googleMap?.let { map ->
+            map.clear()
+            listings.forEach { listing ->
+                val latLng = MapUtils.getLatLngFromAddress(requireContext(), listing.address)
+                latLng?.let {
+                    MapUtils.addMarker(
+                        map,
+                        it,
+                        listing.address,
+                        "$${listing.pricePerHour}/hr"
+                    )
                 }
             }
 
-            val results = ListingRepository.searchListings(address, maxPrice)
-
-            if (results.isEmpty()) {
-                Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
-                updateListings(listView, emptyList())
-            } else {
-                Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
-                updateListings(listView, results)
+            if (listings.isNotEmpty()) {
+                val firstLocation = MapUtils.getLatLngFromAddress(requireContext(), listings[0].address)
+                firstLocation?.let {
+                    MapUtils.moveCameraToPosition(map, it, 12f)
+                }
             }
         }
     }
 
-        val listView = view.findViewById<ListView>(R.id.listViewListings)
-        val dummyListings = listOf("860 Bordigon Trail - $4/hr", "12 Willow St. - $7/hr")
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, dummyListings)
-    override fun onResume() {
-        super.onResume()
-        view?.let {
-            val listView = it.findViewById<ListView>(R.id.listViewListings)
-            // Load all listings on resume
-            // FIX 3: Must be called inside a coroutine scope
-            loadAllListings(listView)
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                googleMap?.isMyLocationEnabled = true
+            }
         }
-    }
-
-    private fun loadAllListings(listView: ListView) {
-        // lifecycleScope to launch a coroutine that handles the suspending call
-        lifecycleScope.launch {
-            // NOTE: The repository instance must be initialized correctly for this to work.
-            val listings = listingRepository.getAllListings()
-            updateListings(listView, listings)
-        }
-    }
-
-    private fun updateListings(listView: ListView, listings: List<Listing>) {
-        val displayList = listings.map { "${it.address} - $${it.pricePerHour}/hr" } // Changed to pricePerHour based on Repository
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, displayList)
-
-            updateListings(listView, ListingRepository.getAllListings())
-        }
-    }
-
-    private fun updateListings(listView: ListView, listings: List<com.comp3074_101384549.projectui.model.Listing>) {
-        val displayList = listings.map { "${it.address} - $${it.price}/hr" }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, displayList)
-        listView.adapter = adapter
     }
 
     override fun onDestroyView() {
