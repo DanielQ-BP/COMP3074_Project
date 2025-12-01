@@ -1,5 +1,6 @@
 package com.comp3074_101384549.projectui.ui.listings
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,25 +8,39 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope // <-- IMPORTANT: Added for coroutines
+import androidx.lifecycle.lifecycleScope
 import com.comp3074_101384549.projectui.repository.ListingRepository
-import androidx.navigation.fragment.findNavController
 import com.comp3074_101384549.projectui.R
+import com.comp3074_101384549.projectui.data.local.AppDatabase
+import com.comp3074_101384549.projectui.data.remote.ApiService
 import com.comp3074_101384549.projectui.model.Listing
-import kotlinx.coroutines.launch // <-- IMPORTANT: Added for coroutines
-import javax.inject.Inject // Assuming Dependency Injection (DI)
+import com.comp3074_101384549.projectui.utils.MapUtils
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.UUID
 
 class CreateListingFragment : Fragment() {
 
-    // --- Dependency Injection Placeholder ---
-    // NOTE: Replace this with your actual DI mechanism (e.g., Hilt, Koin, or ViewModel)
-    // to get a valid instance of ListingRepository.
-    @Inject
-    lateinit var listingRepository: ListingRepository
-    // Make sure your application component injects this Fragment if you use @Inject here.
+    private lateinit var listingRepository: ListingRepository
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val db = AppDatabase.getDatabase(context)
+        val listingDao = db.listingDao()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://example.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+        listingRepository = ListingRepository(apiService, listingDao)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,29 +73,46 @@ class CreateListingFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val newListing = Listing(
-                id = UUID.randomUUID().toString(), // Generate a unique ID
-                pricePerHour = priceValue,
-                availability = avail,
-                description = desc,
-                isActive = true, // Default to active when created
-                latitude = 0.0, // <-- Placeholder: Replace with actual input if available
-                longitude = 0.0, // <-- Placeholder: Replace with actual input if available
-                address = addr,
-            )
-
             // FIX: Launch a coroutine to call the suspending function
             lifecycleScope.launch {
                 try {
-                    // Call the new suspending function
-                    listingRepository.saveNewListing(newListing) // <-- REPLACED addListing()
+                    // Geocode the address to get latitude/longitude
+                    val latLng = try {
+                        MapUtils.getLatLngFromAddress(requireContext(), addr)
+                    } catch (e: Exception) {
+                        Log.e("CreateListingFragment", "Geocoding failed: $e", e)
+                        null
+                    }
 
-                    Toast.makeText(requireContext(), "Listing created!", Toast.LENGTH_SHORT).show()
+                    if (latLng == null) {
+                        Log.w("CreateListingFragment", "Could not geocode address: $addr. Creating listing with default coordinates.")
+                    }
+
+                    val newListing = Listing(
+                        id = UUID.randomUUID().toString(), // Generate a unique ID
+                        pricePerHour = priceValue,
+                        availability = avail,
+                        description = desc,
+                        isActive = true, // Default to active when created
+                        latitude = latLng?.latitude ?: 43.6532, // Default to Toronto if geocoding fails
+                        longitude = latLng?.longitude ?: -79.3832,
+                        address = addr,
+                    )
+
+                    // Call the new suspending function
+                    listingRepository.saveNewListing(newListing)
+
+                    val message = if (latLng != null) {
+                        "Listing created!"
+                    } else {
+                        "Listing created (location may not be accurate)"
+                    }
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 } catch (e: Exception) {
                     // Handle API/DB errors gracefully
-                    Log.e("CreateListingFragment", "Crash during listing creation: $e", e)
+                    Log.e("CreateListingFragment", "Error creating listing: $e", e)
                     Toast.makeText(requireContext(), "Failed to create listing: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }

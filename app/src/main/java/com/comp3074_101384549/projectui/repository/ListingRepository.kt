@@ -65,8 +65,19 @@ class ListingRepository @Inject constructor(
         // 1. Save to local database (cache)
         listingDao.insert(listing.toListingEntity())
 
-        // 2. Send to remote API
-        apiService.createListing(listing)
+        // 2. Try to send to remote API (ignore errors for now since API is not set up)
+        try {
+            apiService.createListing(listing)
+        } catch (e: Exception) {
+            // Silently ignore API errors - listing is already saved locally
+        }
+    }
+
+    /**
+     * Deletes all listings from the local database.
+     */
+    suspend fun deleteAllListings() {
+        listingDao.deleteAll()
     }
 
 }
