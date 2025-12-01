@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     kotlin("kapt")
     alias(libs.plugins.dagger.hilt)
+
 }
 
 // Load local.properties
@@ -85,6 +86,7 @@ dependencies {
     kapt(libs.hilt.compiler) // Use 'kapt' instead of 'implementation' for the compiler
     // Required for lifecycleScope in Fragments
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+
     // Google Maps & Location Services
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")

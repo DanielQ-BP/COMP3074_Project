@@ -12,6 +12,7 @@ import retrofit2.http.Body
  */
 interface ApiService {
 
+
     // Registration endpoint (returns a token or success message)
     @POST("auth/register")
     suspend fun register(@Body user: User): String
@@ -27,4 +28,5 @@ interface ApiService {
     // Post a new listing
     @POST("listings/create")
     suspend fun createListing(@Body listing: Listing): Listing
+
 }

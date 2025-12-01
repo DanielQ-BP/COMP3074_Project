@@ -79,4 +79,5 @@ class ListingRepository @Inject constructor(
     suspend fun deleteAllListings() {
         listingDao.deleteAll()
     }
+
 }

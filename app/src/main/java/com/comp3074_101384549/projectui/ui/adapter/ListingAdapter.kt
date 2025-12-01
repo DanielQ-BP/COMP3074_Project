@@ -42,6 +42,8 @@ class ListingAdapter(
     /**
      * Replaces the adapter's data set with a new list and refreshes the RecyclerView.
      * This is called from the Fragment's Coroutine Scope after fetching data.
+
+
      * Uses DiffUtil for efficient updates.
      */
     fun updateListings(newListings: List<Listing>) {

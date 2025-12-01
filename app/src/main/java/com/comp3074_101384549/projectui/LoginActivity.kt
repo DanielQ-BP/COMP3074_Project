@@ -1,14 +1,18 @@
 package com.comp3074_101384549.projectui
 
-import android.content.Context
 import android.content.Intent
+import android.content.Context
+
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.comp3074_101384549.projectui.data.local.AuthPreferences
 import com.comp3074_101384549.projectui.databinding.ActivityLoginBinding
+
+import com.comp3074_101384549.projectui.HomeActivity
 import com.comp3074_101384549.projectui.data.remote.ApiService
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -19,12 +23,17 @@ class LoginActivity : AppCompatActivity() {
     // In a Hilt setup, this would be @Inject lateInit var
     private lateinit var apiService: ApiService
 
+    
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         authPreferences = AuthPreferences(applicationContext)
+
 
         binding.loginButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString()
@@ -34,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter both fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
 
             // Check against "MockUserDB"
             val sharedPrefs = getSharedPreferences("MockUserDB", Context.MODE_PRIVATE)

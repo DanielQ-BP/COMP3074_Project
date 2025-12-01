@@ -16,14 +16,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.comp3074_101384549.projectui.R
 import com.comp3074_101384549.projectui.data.local.AppDatabase
 import com.comp3074_101384549.projectui.data.remote.ApiService
 import com.comp3074_101384549.projectui.databinding.FragmentHomeBinding
-import com.comp3074_101384549.projectui.model.Listing
+
 import com.comp3074_101384549.projectui.repository.ListingRepository
+import com.comp3074_101384549.projectui.model.Listing
+
 import com.comp3074_101384549.projectui.ui.adapter.ListingAdapter
 import com.comp3074_101384549.projectui.ui.listings.ListingDetailsFragment
 import com.comp3074_101384549.projectui.utils.MapUtils
@@ -38,6 +41,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var listingRepository: ListingRepository
+
+    // If not using DI, you would need to instantiate or provide it here.
+
     private var googleMap: GoogleMap? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -46,6 +52,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1002
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val db = AppDatabase.getDatabase(context)
+        val listingDao = db.listingDao()
+
+        // TODO: replace with your real backend base URL when ready
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://example.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        listingRepository = ListingRepository(apiService, listingDao)
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,6 +98,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
@@ -102,21 +127,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val maxPriceInput = view.findViewById<EditText>(R.id.editTextMaxPrice)
         val searchButton = view.findViewById<Button>(R.id.buttonSearch)
 
-        loadAllListings()
+        // Load all listings on startup
+        // FIX 1: Must be called inside a coroutine scope
+        loadAllListings(listView)
+
 
         searchButton.setOnClickListener {
             val address = addressInput.text.toString().trim()
             val maxPrice = maxPriceInput.text.toString().toDoubleOrNull()
+
+            // Perform search
+            // FIX 2: Must be called inside a coroutine scope
+
 
             lifecycleScope.launch {
                 val results = listingRepository.searchListings(address, maxPrice)
 
                 if (results.isEmpty()) {
                     Toast.makeText(requireContext(), "No parking spots found", Toast.LENGTH_SHORT).show()
-                    updateListings(emptyList())
+                    updateListings(listView, emptyList())
                 } else {
                     Toast.makeText(requireContext(), "Found ${results.size} parking spot(s)", Toast.LENGTH_SHORT).show()
-                    updateListings(results)
+                    updateListings(listView, results)
+
                 }
             }
         }
@@ -145,6 +178,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
+        // Reload all listings when returning to this fragment
         loadAllListings()
     }
 
@@ -156,12 +190,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateListings(listings: List<Listing>) {
+        // Update RecyclerView
         listingAdapter.updateListings(listings)
 
+        // Update markers on the map
         googleMap?.let { map ->
             map.clear()
             listings.forEach { listing ->
-                val latLng = MapUtils.getLatLngFromAddress(requireContext(), listing.address)
+                val latLng =
+                    MapUtils.getLatLngFromAddress(requireContext(), listing.address)
                 latLng?.let {
                     MapUtils.addMarker(
                         map,
@@ -173,7 +210,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
 
             if (listings.isNotEmpty()) {
-                val firstLocation = MapUtils.getLatLngFromAddress(requireContext(), listings[0].address)
+                val firstLocation =
+                    MapUtils.getLatLngFromAddress(requireContext(), listings[0].address)
                 firstLocation?.let {
                     MapUtils.moveCameraToPosition(map, it, 12f)
                 }
@@ -189,7 +227,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
                 googleMap?.isMyLocationEnabled = true
             }
         }
@@ -197,7 +237,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Good practice to clear the binding reference
         _binding = null
     }
 }

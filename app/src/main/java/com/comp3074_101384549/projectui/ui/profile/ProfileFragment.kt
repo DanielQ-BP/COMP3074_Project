@@ -24,10 +24,12 @@ class ProfileFragment : Fragment() {
 
     private lateinit var prefs: SharedPreferences
 
-    // Store selected image URI
+
+    // Store selected image URI (current session)
     private var selectedImageUri: Uri? = null
 
-    // Gallery picker
+
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
@@ -54,14 +56,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Load text profile + saved profile picture
+        // Load profile text + image
         loadProfile()
         loadProfileImage()
 
-        // By default, hide the Change Photo button (only show in edit mode)
+        // By default, Change Photo button is hidden (only visible in edit mode)
         binding.btnChangePhoto.visibility = View.GONE
 
-        // Change photo button: open gallery
+        // Change photo: open gallery
+
         binding.btnChangePhoto.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
@@ -71,7 +74,8 @@ class ProfileFragment : Fragment() {
             binding.editContainer.visibility = View.VISIBLE
             binding.editProfileButton.visibility = View.GONE
 
-            // Now allow changing photo too
+            // Now allow changing the photo as well
+
             binding.btnChangePhoto.visibility = View.VISIBLE
         }
 
@@ -101,6 +105,7 @@ class ProfileFragment : Fragment() {
             binding.readOnlyContainer.visibility = View.VISIBLE
             binding.editContainer.visibility = View.GONE
             binding.editProfileButton.visibility = View.VISIBLE
+            binding.btnChangePhoto.visibility = View.GONE
 
             // Hide photo change button when leaving edit mode
             binding.btnChangePhoto.visibility = View.GONE
@@ -141,11 +146,17 @@ class ProfileFragment : Fragment() {
     private fun loadProfileImage() {
         val uriString = prefs.getString(KEY_PROFILE_IMAGE_URI, null)
         if (!uriString.isNullOrEmpty()) {
-            val uri = Uri.parse(uriString)
-            selectedImageUri = uri
-            binding.profileImage.setImageURI(uri)
+            try {
+                val uri = Uri.parse(uriString)
+                selectedImageUri = uri
+                binding.profileImage.setImageURI(uri)
+            } catch (e: Exception) {
+                // If we fail to load (e.g. no permission anymore), just clear it and use default
+                prefs.edit().remove(KEY_PROFILE_IMAGE_URI).apply()
+                // profileImage will keep the default src from XML
+            }
         }
-        // else it will just use the default src from XML
+
     }
 
     override fun onDestroyView() {
