@@ -71,23 +71,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val db = AppDatabase.getDatabase(context)
-        val listingDao = db.listingDao()
-
-        // TODO: replace with your real backend base URL when ready
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://example.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
-
-        listingRepository = ListingRepository(apiService, listingDao)
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
