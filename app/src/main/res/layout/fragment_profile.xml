@@ -12,13 +12,6 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp">
 
-        <Button
-            android:text="Settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-</ScrollView>
         <LinearLayout
             android:orientation="vertical"
             android:padding="24dp"
@@ -214,9 +207,6 @@
                 android:layout_marginTop="16dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:textColor="#6A1B9A" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</ScrollView>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </ScrollView>

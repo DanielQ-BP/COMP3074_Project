@@ -12,18 +12,6 @@ class ListingRepository @Inject constructor(
     private val listingDao: ListingDao
 ) {
 
-    init {
-        // Sample listings
-        listings.add(Listing("860 Trail", 4.0, "Mon-Fri", "6pm-9pm", "outdoor parking"))
-        listings.add(Listing("12 Wilson", 7.0, "Daily", "All day", "Covered parking spot"))
-    }
-
-    fun getAllListings(): List<Listing> {
-        return listings
-    }
-
-    fun addListing(listing: Listing) {
-        listings.add(listing)
     // Helper function to convert a list of ListingEntity objects to a list of Listing objects
     private fun List<ListingEntity>.toListingList(): List<Listing> {
         return this.map { entity ->
@@ -77,25 +65,19 @@ class ListingRepository @Inject constructor(
         // 1. Save to local database (cache)
         listingDao.insert(listing.toListingEntity())
 
-        // 2. Send to remote API
-        apiService.createListing(listing)
+        // 2. Try to send to remote API (ignore errors for now since API is not set up)
+        try {
+            apiService.createListing(listing)
+        } catch (e: Exception) {
+            // Silently ignore API errors - listing is already saved locally
+        }
     }
 
-    fun searchListings(address: String = "", maxPrice: Double? = null): List<Listing> {
-        var results = listings.toList()
-
-        // Filter by address if provided
-        if (address.isNotEmpty()) {
-            results = results.filter {
-                it.address.contains(address, ignoreCase = true)
-            }
-        }
-
-        // Filter by max price if provided
-        if (maxPrice != null && maxPrice > 0) {
-            results = results.filter { it.price <= maxPrice }
-        }
-
-        return results
+    /**
+     * Deletes all listings from the local database.
+     */
+    suspend fun deleteAllListings() {
+        listingDao.deleteAll()
     }
+
 }

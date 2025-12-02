@@ -3,7 +3,6 @@ package com.comp3074_101384549.projectui.ui.profile
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,10 +24,12 @@ class ProfileFragment : Fragment() {
 
     private lateinit var prefs: SharedPreferences
 
-    // Store selected image URI
+
+    // Store selected image URI (current session)
     private var selectedImageUri: Uri? = null
 
-    // Gallery picker
+
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
@@ -44,10 +45,6 @@ class ProfileFragment : Fragment() {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-
-    private val PREFS_NAME = "ParkSpotPrefs"
-    private val KEY_USERNAME = "username"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,80 +56,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
-
-        fun loadProfile() {
-            val username = prefs.getString(KEY_USERNAME, "John Doe") ?: "John Doe"
-            val age      = prefs.getInt("age", 0)
-            val desc     = prefs.getString("description", "") ?: ""
-
-            binding.usernameTextView.text = username
-
-            binding.nameReadOnly.text = "Name: $username"
-
-            binding.ageReadOnly.text = "Age: ${if (age == 0) "–" else age}"
-            binding.descriptionReadOnly.text = "Description: ${if (desc.isEmpty()) "–" else desc}"
-
-            binding.nameEditText.setText(username)
-            binding.ageEditText.setText(if (age > 0) age.toString() else "")
-            binding.descriptionEditText.setText(desc)
-        }
-
-        loadProfile()
-
-        binding.editProfileButton.setOnClickListener {
-            binding.readOnlyContainer.visibility = View.GONE
-            binding.editContainer.visibility     = View.VISIBLE
-            binding.editProfileButton.visibility = View.GONE
-        }
-
-
-        binding.saveButton.setOnClickListener {
-            val newName = binding.nameEditText.text.toString().trim()
-            val newAgeStr = binding.ageEditText.text.toString().trim()
-            val newDesc = binding.descriptionEditText.text.toString().trim()
-
-            if (newName.isEmpty() || newAgeStr.isEmpty() || newDesc.isEmpty()) {
-                Toast.makeText(requireContext(),
-                    "Please fill all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val newAge = newAgeStr.toIntOrNull() ?: 0
-
-            with(prefs.edit()) {
-                putString(KEY_USERNAME, newName)
-                putInt("age", newAge)
-                putString("description", newDesc)
-                apply()
-            }
-
-            binding.readOnlyContainer.visibility = View.VISIBLE
-            binding.editContainer.visibility     = View.GONE
-            binding.editProfileButton.visibility = View.VISIBLE
-
-            loadProfile()
-
-            Toast.makeText(requireContext(),
-                "Profile saved (Prototype)", Toast.LENGTH_SHORT).show()
-        }
-
-
-    }
-
-}
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Load text profile + saved profile picture
+        // Load profile text + image
         loadProfile()
         loadProfileImage()
 
-        // By default, hide the Change Photo button (only show in edit mode)
+        // By default, Change Photo button is hidden (only visible in edit mode)
         binding.btnChangePhoto.visibility = View.GONE
 
-        // Change photo button: open gallery
+        // Change photo: open gallery
+
         binding.btnChangePhoto.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
@@ -142,7 +74,8 @@ class ProfileFragment : Fragment() {
             binding.editContainer.visibility = View.VISIBLE
             binding.editProfileButton.visibility = View.GONE
 
-            // Now allow changing photo too
+            // Now allow changing the photo as well
+
             binding.btnChangePhoto.visibility = View.VISIBLE
         }
 
@@ -172,6 +105,7 @@ class ProfileFragment : Fragment() {
             binding.readOnlyContainer.visibility = View.VISIBLE
             binding.editContainer.visibility = View.GONE
             binding.editProfileButton.visibility = View.VISIBLE
+            binding.btnChangePhoto.visibility = View.GONE
 
             // Hide photo change button when leaving edit mode
             binding.btnChangePhoto.visibility = View.GONE
@@ -212,15 +146,21 @@ class ProfileFragment : Fragment() {
     private fun loadProfileImage() {
         val uriString = prefs.getString(KEY_PROFILE_IMAGE_URI, null)
         if (!uriString.isNullOrEmpty()) {
-            val uri = Uri.parse(uriString)
-            selectedImageUri = uri
-            binding.profileImage.setImageURI(uri)
+            try {
+                val uri = Uri.parse(uriString)
+                selectedImageUri = uri
+                binding.profileImage.setImageURI(uri)
+            } catch (e: Exception) {
+                // If we fail to load (e.g. no permission anymore), just clear it and use default
+                prefs.edit().remove(KEY_PROFILE_IMAGE_URI).apply()
+                // profileImage will keep the default src from XML
+            }
         }
-        // else it will just use the default src from XML
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
+}
